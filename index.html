@@ -23,6 +23,11 @@
 
 <!-- /Dublin Core -->
 
+<!-- CSS -->
+
+<link href="style.css" rel="stylesheet" type="text/css">
+<!-- /CSS -->
+
 <!-- Javascript -->
 <script src="js/head.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -41,7 +46,8 @@ function todoTask(task, rawDate){
 	self.task = task;
 	// needs to be parsed to be viewed
 	self.rawDate = rawDate; 
-	self.completion = false;
+	self.completion = ko.observable(false);
+	self.completeContent = ko.observable("&nbsp;");
 	// parsing the rawDate into a nicer format
 	self.date = ko.computed(function(){
 		var day = rawDate.getDate();
@@ -50,6 +56,19 @@ function todoTask(task, rawDate){
 		var dateFull = month + '/' + day + '/' + year;
 		return dateFull;
 	});
+	
+	//task completion toggle
+	self.completeTask = function(){
+		if(self.completion() == false){
+		self.completion(true);
+		//set symbol to show completed. I used the empty symbol
+		self.completeContent("&empty;");
+		}
+		else{
+		self.completion(false);
+		self.completeContent("&nbsp;");
+		}
+	};
 }
 
 // what are we looking at again?
@@ -63,14 +82,30 @@ function taskViewModel(){
 		new todoTask("Call Bank", new Date())
 	]);	
 	
-	// Input Data 
-	self.newTask = "";
+	
+	// let's count completed tasks
+	self.completedTasks = ko.computed(function(){
+		var total = 0;
+		var i = 0;
+		for (i; i < self.tasks().length; i++){
+			if(self.tasks()[i].completion() == false){
+				total++;	
+			}
+		}
+		
+		return total;
+	});
+	
+	
+	// Input Data - Observable so that it can be reset
+	self.newTask = ko.observable('');
 	
 	//Let's add some data
 	 self.addTask = function() {
-        self.tasks.push(new todoTask(self.newTask, new Date()));
-		self.newTask= " ";
-    }
+        self.tasks.push(new todoTask(self.newTask(), new Date()));
+		//input reset after submit
+		self.newTask('');
+		    }
 	
 	//remove task
 	self.removeTask = function(){
@@ -81,42 +116,41 @@ function taskViewModel(){
 // fire it up!
 ko.applyBindings(new taskViewModel());
 
-});
+//fade in initial list 
+$(".task-list").animate({ opacity: 1}, 1000);
 
+});
 </script>
 
 <!-- /Javascript -->
 
-<style></style>
 </head>
 <body>
-<header>
+<div id="top">
   <h1>Great To-Do Application</h1>
-  <h3>You've <span class="tasks-left"> </span> to do</h3>
-</header>
-<div id="main-container">
+  <h3>You've <span class="tasks-left" data-bind="text: completedTasks" ></span> tasks to do</h3>
+</div>
+<div id="main-container"> 
   
   <!-- Input Container where new tasks can be added -->
   <section id="input-container">
-  <form data-bind="submit: addTask">
+    <form data-bind="submit: addTask">
       <input type="text" name="task-input" id="task-input" data-bind="value: newTask"/>
-      <input type="button" data-bind="click: addTask" value="add task!" />
-      </form>
+      <input type="submit" value="add task!" />
+    </form>
   </section>
   <!-- end input-container --> 
   
   <!-- Task Container where tasks are located -->
   <section id="task-container">
-      <h2>Tasks</h2>
-      <!-- task list -->
-      <div class="task-list" data-bind="foreach: tasks">
-      <article class="task"> <span class="checkbox">[]</span><span class="task-name" data-bind="text: task"></span> <span class="task-date" data-bind="text: date"></span> <a href="javascript:void(0)" class="task-remove" data-bind="click: $root.removeTask">X</a> 
-      </article>
-      </div><!-- /task-list -->
+    <h2>Tasks</h2>
+    <!-- task list -->
+    <div class="task-list" data-bind="foreach: tasks">
+      <article class="task" data-bind=" css: { completed: completion() == true}"> <a href="javascript:void(0)"class="checkbox" data-bind="click: completeTask, html: completeContent"></a><span class="task-name" data-bind="text: task"></span> <span class="task-date" data-bind="text: date"></span> <a href="javascript:void(0)" class="task-remove" data-bind="click: $root.removeTask">X</a> </article>
+    </div>
+    <!-- /task-list --> 
   </section>
-  <footer>
-  Created by AntJanus
-  </footer>
+  <footer> <img src="images/logo.png" height="50px"></footer>
 </div>
 </body>
 </html>
