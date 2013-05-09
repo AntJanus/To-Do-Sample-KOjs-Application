@@ -140,7 +140,6 @@ background:#fff;
 .task-list{
 	overflow: auto;
 	height: 350px;
-	opacity:0;	
 }
 
 
@@ -241,4 +240,14 @@ input[type=submit]{
 	width: 15%;
 	float:right;
 	cursor: pointer;
+}
+
+
+/************************* Animation
+**********************************************/
+.animated{
+    -webkit-transition: 1s ease-out all;
+    -moz-transition: 1s ease-out all;
+    -o-transition: 1s ease-out all;
+    transition: 1s ease-out all; 
 }

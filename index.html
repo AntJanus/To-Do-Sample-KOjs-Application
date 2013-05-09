@@ -35,91 +35,7 @@
 head.js(
 {jquery: "js/jquery.js"}, 
 {knockout: "js/knockout.js"},
-function(){
-
-
-//knockout declarations
-
-// what's a task? class declaration
-function todoTask(task, rawDate){
-	var self = this;
-	self.task = task;
-	// needs to be parsed to be viewed
-	self.rawDate = rawDate; 
-	self.completion = ko.observable(false);
-	self.completeContent = ko.observable("&nbsp;");
-	// parsing the rawDate into a nicer format
-	self.date = ko.computed(function(){
-		var day = rawDate.getDate();
-		var month = rawDate.getMonth()+1;
-		var year = rawDate.getFullYear();
-		var dateFull = month + '/' + day + '/' + year;
-		return dateFull;
-	});
-	
-	//task completion toggle
-	self.completeTask = function(){
-		if(self.completion() == false){
-		self.completion(true);
-		//set symbol to show completed. I used the empty symbol
-		self.completeContent("&empty;");
-		}
-		else{
-		self.completion(false);
-		self.completeContent("&nbsp;");
-		}
-	};
-}
-
-// what are we looking at again?
-function taskViewModel(){
-	
-	var self = this;
-
-	// task array and defaults
-	self.tasks = ko.observableArray([
-		new todoTask("Pickup Milk", new Date()),
-		new todoTask("Call Bank", new Date())
-	]);	
-	
-	
-	// let's count completed tasks
-	self.completedTasks = ko.computed(function(){
-		var total = 0;
-		var i = 0;
-		for (i; i < self.tasks().length; i++){
-			if(self.tasks()[i].completion() == false){
-				total++;	
-			}
-		}
-		
-		return total;
-	});
-	
-	
-	// Input Data - Observable so that it can be reset
-	self.newTask = ko.observable('');
-	
-	//Let's add some data
-	 self.addTask = function() {
-        self.tasks.push(new todoTask(self.newTask(), new Date()));
-		//input reset after submit
-		self.newTask('');
-		    }
-	
-	//remove task
-	self.removeTask = function(){
-		self.tasks.remove(this);
-	}
-}
-
-// fire it up!
-ko.applyBindings(new taskViewModel());
-
-//fade in initial list 
-$(".task-list").animate({ opacity: 1}, 1000);
-
-});
+"js/app.js");
 </script>
 
 <!-- /Javascript -->
@@ -143,10 +59,10 @@ $(".task-list").animate({ opacity: 1}, 1000);
   
   <!-- Task Container where tasks are located -->
   <section id="task-container">
-    <h2>Tasks</h2>
+    <h2>Tasks</h2> <a href="#" data-bind="click: saveState">save</a>
     <!-- task list -->
     <div class="task-list" data-bind="foreach: tasks">
-      <article class="task" data-bind=" css: { completed: completion() == true}"> <a href="javascript:void(0)"class="checkbox" data-bind="click: completeTask, html: completeContent"></a><span class="task-name" data-bind="text: task"></span> <span class="task-date" data-bind="text: date"></span> <a href="javascript:void(0)" class="task-remove" data-bind="click: $root.removeTask">X</a> </article>
+      <article class="task animated setup" data-bind=" css: { completed: completion() == true}"> <a href="javascript:void(0)"class="checkbox" data-bind="click: completeTask, html: completeContent"></a><span class="task-name" data-bind="text: task"></span> <span class="task-date" data-bind="text: date"></span> <a href="javascript:void(0)" class="task-remove" data-bind="click: $root.removeTask">X</a> </article>
     </div>
     <!-- /task-list --> 
   </section>
