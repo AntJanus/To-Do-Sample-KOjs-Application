@@ -6,6 +6,8 @@ Follow along with the tutorial on how to create this application and what the lo
 
 http://antjanus.com/blog/web-development-tutorials/build-a-to-do-application-using-knockoutjs/
 
+[Demo](http://antjan-us/labs/to-do-app)
+
 ##Changelog
 
 v0.9 
