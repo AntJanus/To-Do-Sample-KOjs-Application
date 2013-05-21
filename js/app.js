@@ -92,7 +92,6 @@ function taskViewModel(){
 	self.saveState = function(){
 		if(typeof(Storage) !== "undefined"){
 			//local storage support
-			self.saveText('saved');
 			var data = $.map(self.tasks(), function(item){
 				
 				var pack = {
@@ -101,7 +100,10 @@ function taskViewModel(){
 					'completion': item.completion(),
 					'completeContent': item.completeContent()
 				};
-				self.saveText('save');
+				self.saveText('saved');
+				$('#saving').fadeOut('400', function(){
+					self.saveText('save');
+				}).fadeIn('400');
 				return pack;
 			});
 			localStorage.todoTasks = JSON.stringify(data);
