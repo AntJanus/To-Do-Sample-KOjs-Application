@@ -45,6 +45,7 @@ function todoTask(task, rawDate, dat){
 function taskViewModel(){
 	var self = this;
 	self.tasks = ko.observableArray([]);
+	self.saveText = ko.observable('');
 	// task array and defaults
 	if(typeof(Storage) !== undefined){
 		if(localStorage.todoTasks !== undefined){
@@ -56,6 +57,7 @@ function taskViewModel(){
 				return new todoTask(item.task, new Date(item.date), pack);
 			});
 			self.tasks(mappedTasks);
+			self.saveText('save');
 		}
 	}
 	// let's count completed tasks
@@ -90,6 +92,7 @@ function taskViewModel(){
 	self.saveState = function(){
 		if(typeof(Storage) !== "undefined"){
 			//local storage support
+			self.saveText('saved');
 			var data = $.map(self.tasks(), function(item){
 				
 				var pack = {
@@ -98,6 +101,7 @@ function taskViewModel(){
 					'completion': item.completion(),
 					'completeContent': item.completeContent()
 				};
+				self.saveText('save');
 				return pack;
 			});
 			localStorage.todoTasks = JSON.stringify(data);

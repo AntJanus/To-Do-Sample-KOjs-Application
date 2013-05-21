@@ -59,7 +59,7 @@ head.js(
   
   <!-- Task Container where tasks are located -->
   <section id="task-container">
-    <h2>Tasks</h2> <a href="#" data-bind="click: saveState">save</a>
+    <h2>Tasks</h2> <a href="#" id="saving" data-bind="click: saveState, text: saveText">save</a>
     <!-- task list -->
     <div class="task-list" data-bind="foreach: tasks">
       <article class="task animated setup" data-bind=" css: { completed: completion() == true}"> <a href="javascript:void(0)"class="checkbox" data-bind="click: completeTask, html: completeContent"></a><span class="task-name" data-bind="text: task"></span> <span class="task-date" data-bind="text: date"></span> <a href="javascript:void(0)" class="task-remove" data-bind="click: $root.removeTask">X</a> </article>
